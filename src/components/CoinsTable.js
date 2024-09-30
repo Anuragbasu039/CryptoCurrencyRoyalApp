@@ -36,13 +36,10 @@ const CoinsTable = () => {
 
   const fetchCoins = async () => {
     setLoading(true);
-    const { data } = await await axios.get(CoinList(currency));
-
+    const { data } = await axios.get(CoinList(currency));
     setCoins(data);
-
     setLoading(false);
   };
-  // console.log(coins);
 
   useEffect(() => {
     fetchCoins();
@@ -65,6 +62,7 @@ const CoinsTable = () => {
         coin.symbol.toLowerCase().includes(search)
     );
   };
+
   const useStyles = makeStyles({
     row: {
       backgroundColor: "white",
@@ -165,24 +163,27 @@ const CoinsTable = () => {
                         </TableCell>
                         <TableCell align="right">
                           {symbol}{" "}
-                          {numberWithCommas(row.current_price.toFixed(2))}
+                          {row.current_price
+                            ? numberWithCommas(row.current_price.toFixed(2))
+                            : "N/A"}
                         </TableCell>
                         <TableCell
                           align="right"
                           style={{
-                            color: profit > 0 ? "rgb(14, 203, 129)" : "red",
+                            color: profit ? "rgb(14, 203, 129)" : "red",
                             fontWeight: 500,
                           }}
                         >
                           {profit && "+"}
-                          {row.price_change_percentage_24h.toFixed(2)}%
+                          {row.price_change_percentage_24h
+                            ? row.price_change_percentage_24h.toFixed(2)
+                            : "N/A"}%
                         </TableCell>
                         <TableCell align="right">
                           {symbol}{" "}
-                          {numberWithCommas(
-                            row.market_cap.toString().slice(0, -6)
-                          )}
-                          M
+                          {row.market_cap
+                            ? numberWithCommas(row.market_cap.toString().slice(0, -6))
+                            : "N/A"} M
                         </TableCell>
                       </TableRow>
                     );
@@ -192,7 +193,7 @@ const CoinsTable = () => {
           )}
         </TableContainer>
         <Pagination
-          count={(handleSearch()?.length / 10).toFixed(0)}
+          count={Math.ceil(handleSearch()?.length / 10)}
           style={{
             padding: 20,
             width: "100%",
